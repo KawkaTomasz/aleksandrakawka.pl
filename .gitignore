@@ -1,0 +1,11 @@
+node_modules/
+# Oryginały zdjęć (duże pliki) – do repo trafiają tylko wygenerowane warianty
+assets/img/src/*
+!assets/img/src/.gitkeep
+og-tmp.png
+.claude/
+*.report.html
+*.report.json
+.lighthouse/
+.DS_Store
+Thumbs.db
