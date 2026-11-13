@@ -70,31 +70,6 @@
     play();
   }
 
-  // ---------- Karty usług i szkoleń (obracane) ----------
-  const cards = $$('[data-card]');
-  let openCard = null;
-  const setCard = (card, open, moveFocus = true) => {
-    const front = $('.card__front', card);
-    const back = $('.card__back', card);
-    card.classList.toggle('is-open', open);
-    front.setAttribute('aria-expanded', String(open));
-    back.inert = !open;
-    front.inert = open;
-    if (moveFocus) (open ? $('.card__close', card) : front).focus({ preventScroll: true });
-    openCard = open ? card : null;
-  };
-  cards.forEach((card) => {
-    $('.card__back', card).inert = true;
-    $('.card__front', card).addEventListener('click', () => {
-      if (openCard && openCard !== card) setCard(openCard, false, false);
-      setCard(card, true);
-    });
-    $('.card__close', card).addEventListener('click', () => setCard(card, false));
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && card.classList.contains('is-open')) setCard(card, false);
-    });
-  });
-
   // ---------- Filtry portfolio ----------
   const filters = $('[data-filters]');
   const gallery = $('[data-gallery]');
@@ -161,8 +136,9 @@
     go(0);
   });
 
-  // ---------- Podświetlenie aktywnej sekcji w menu ----------
-  const navLinks = $$('.primary-nav .nav-link');
+  // ---------- Podświetlenie aktywnej sekcji w menu (tylko linki do sekcji bieżącej strony) ----------
+  // Podstrony (/oferta/ itd.) są oznaczane na stałe przez aria-current="page" (scripts/layout.mjs).
+  const navLinks = $$('.primary-nav .nav-link').filter((a) => a.hash && a.pathname === location.pathname);
   if ('IntersectionObserver' in window && navLinks.length) {
     const byId = new Map(navLinks.map((a) => [a.hash.slice(1), a]));
     const observer = new IntersectionObserver((entries) => {

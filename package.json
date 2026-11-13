@@ -7,8 +7,10 @@
   "scripts": {
     "images": "node scripts/images.mjs",
     "critical": "node scripts/critical.mjs",
+    "layout": "node scripts/layout.mjs",
+    "pages": "npm run layout && npm run critical",
     "fonts": "node scripts/fonts.mjs",
-    "build": "npm run images && npm run critical",
+    "build": "npm run images && npm run pages",
     "serve": "node scripts/serve.mjs"
   },
   "engines": {

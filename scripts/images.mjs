@@ -33,6 +33,11 @@ const IMAGES = [
   { name: 'hero-3', ratio: 16 / 10, color: C.hero3, variants: HERO_VARIANTS },
   { name: 'o-mnie', ratio: 4 / 5, color: C.ph2, label: 'Portret · 4:5', position: 'top' },
   { name: 'studio', ratio: 4 / 5, color: C.ph3, label: 'Studio · 4:5' },
+  // Podstrona /studio/: galeria wnętrza
+  { name: 'studio-2', ratio: 4 / 5, color: C.ph2, label: 'Studio 2 · 4:5' },
+  { name: 'studio-3', ratio: 4 / 5, color: C.ph3, label: 'Studio 3 · 4:5' },
+  { name: 'studio-4', ratio: 4 / 5, color: C.ph1, label: 'Studio 4 · 4:5' },
+  { name: 'studio-5', ratio: 4 / 5, color: C.ph2, label: 'Studio 5 · 4:5' },
   { name: 'usluga-slubny', ratio: 2 / 3, color: C.ph2, label: 'Makijaż ślubny · 2:3' },
   { name: 'usluga-okolicznosciowy', ratio: 2 / 3, color: C.ph3, label: 'Makijaż okolicznościowy · 2:3' },
   { name: 'usluga-fryzury', ratio: 2 / 3, color: C.ph3, label: 'Stylizacja fryzur · 2:3' },

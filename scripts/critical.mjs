@@ -2,8 +2,9 @@
 // do <head> każdej strony HTML, między komentarzami <!-- critical:start --> i <!-- critical:end -->.
 // Uruchom po każdej zmianie w tej części arkusza: `npm run critical`.
 import { readFile, writeFile } from 'node:fs/promises';
+import { PAGES } from './pages.mjs';
 
-const pages = ['index.html', 'polityka-prywatnosci.html', '404.html'];
+const pages = PAGES.map((p) => p.file);
 const css = await readFile('css/style.css', 'utf8');
 const match = css.match(/\/\* critical:start \*\/([\s\S]*?)\/\* critical:end \*\//);
 if (!match) throw new Error('Brak znaczników critical:start / critical:end w css/style.css');
