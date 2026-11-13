@@ -103,11 +103,13 @@ for (const img of IMAGES) {
     for (const w of WIDTHS) {
       const h = Math.round(w / v.ratio);
       const focus = Array.isArray(img.focus) ? img.focus : img.focus?.[v.suffix];
-      const pipeline = src && focus
-        ? sharp(src).rotate().extract(focusBox(meta, v.ratio, focus)).resize(w, h)
+      let pipeline = src && focus
+        ? sharp(src).rotate().extract(focusBox(meta, v.ratio, focus)).resize(w, h, { kernel: 'lanczos3' })
         : src
-        ? sharp(src).rotate().resize(w, h, { fit: 'cover', position: img.position ?? sharp.strategy.attention })
+        ? sharp(src).rotate().resize(w, h, { fit: 'cover', position: img.position ?? sharp.strategy.attention, kernel: 'lanczos3' })
         : sharp(placeholderSvg(w, h, img.color, img.label, img.labelColor));
+      // Powiększanie małego oryginału rozmywa – delikatne wyostrzenie maskuje to (szczegółów nie doda)
+      if (src && w > Math.min(meta.width, meta.height * v.ratio) * 1.1) pipeline = pipeline.sharpen({ sigma: 0.8, m1: 0.6, m2: 2 });
       await writeFormats(pipeline, join(OUT, `${img.name}${v.suffix}-${w}`));
     }
   }

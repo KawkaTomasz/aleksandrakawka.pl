@@ -32,42 +32,52 @@
   // ---------- Hero: karuzela zdjęć (przełącza się sama) ----------
   // Przy „ogranicz ruch” w systemie nie przewija się sama – zostają tylko wskaźniki.
   // Zatrzymuje się, gdy karta przeglądarki jest w tle.
-  const heroSlides = $$('[data-hero-slide]');
+  // Slajdy z data-hero-mobile są pomijane od 48em (np. zdjęcie za małe na szeroki ekran).
+  const allHeroSlides = $$('[data-hero-slide]');
   const heroDots = $('[data-hero-dots]');
-  if (heroSlides.length > 1 && heroDots) {
+  if (allHeroSlides.length && heroDots) {
     const INTERVAL = 6000;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const wide = window.matchMedia('(min-width: 48em)');
+    let heroSlides = [];
+    let dots = [];
     let current = 0;
     let timer = 0;
 
     heroDots.setAttribute('role', 'group');
     heroDots.setAttribute('aria-label', 'Zdjęcia w tle');
-    const dots = heroSlides.map((_, i) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'hero__dot';
-      b.setAttribute('aria-label', `Zdjęcie ${i + 1} z ${heroSlides.length}`);
-      b.append(document.createElement('span'));
-      b.addEventListener('click', () => { show(i); play(); });
-      heroDots.append(b);
-      return b;
-    });
 
     function show(i) {
       current = (i + heroSlides.length) % heroSlides.length;
-      heroSlides.forEach((s, n) => s.classList.toggle('is-active', n === current));
+      allHeroSlides.forEach((s) => s.classList.toggle('is-active', s === heroSlides[current]));
       dots.forEach((d, n) => d.setAttribute('aria-current', n === current ? 'true' : 'false'));
     }
     function stop() { window.clearInterval(timer); }
     function play() {
       stop();
-      if (!reduceMotion.matches && !document.hidden) timer = window.setInterval(() => show(current + 1), INTERVAL);
+      if (heroSlides.length > 1 && !reduceMotion.matches && !document.hidden) timer = window.setInterval(() => show(current + 1), INTERVAL);
+    }
+    function build() {
+      heroSlides = allHeroSlides.filter((s) => !(wide.matches && s.hasAttribute('data-hero-mobile')));
+      heroDots.replaceChildren();
+      dots = heroSlides.length > 1 ? heroSlides.map((_, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'hero__dot';
+        b.setAttribute('aria-label', `Zdjęcie ${i + 1} z ${heroSlides.length}`);
+        b.append(document.createElement('span'));
+        b.addEventListener('click', () => { show(i); play(); });
+        heroDots.append(b);
+        return b;
+      }) : [];
+      show(0);
+      play();
     }
 
     document.addEventListener('visibilitychange', play);
     reduceMotion.addEventListener('change', play);
-    show(0);
-    play();
+    wide.addEventListener('change', build);
+    build();
   }
 
   // ---------- Filtry portfolio ----------

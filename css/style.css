@@ -524,6 +524,9 @@ main:focus { outline: none; }
 .hero__dot[aria-current="true"] span { width: 2.25rem; background: #ffffff; }
 .js .hero__inner { padding-bottom: 4rem; }
 @media (min-width: 48em) {
+  /* Slajd tylko na telefon; bez JS pierwszy widoczny jest następny slajd */
+  .hero__slide[data-hero-mobile] { display: none; }
+  html:not(.js) .hero__slide[data-hero-mobile] + .hero__slide { opacity: 1; }
   .hero__inner { padding-block: 7.5rem 3.5rem; }
   .js .hero__inner { padding-bottom: 4.5rem; }
   .hero__badge { display: block; }
@@ -531,6 +534,8 @@ main:focus { outline: none; }
 /* Desktop: cały blok tekstu nie szerszy niż połowa ekranu */
 @media (min-width: 64em) {
   :root { --fs-h1: min(6vw, 5.5rem); }
+  .hero { min-height: max(30rem, min(38rem, calc(70svh - var(--header-h)))); }
+  .hero__inner { padding-top: 5rem; }
   .hero__copy { max-width: 50%; }
 }
 
