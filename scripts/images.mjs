@@ -20,14 +20,19 @@ const OUT = 'assets/img';
 const WIDTHS = [480, 960, 1600];
 const EXTS = ['jpg', 'jpeg', 'png', 'webp', 'avif', 'tif', 'tiff'];
 
-const C = { hero: '#4a4440', ph1: '#eeeae5', ph2: '#e2ddd6', ph3: '#d5cec6', ph4: '#9a8f87' };
+const C = { hero: '#4a4440', hero2: '#5a524c', hero3: '#3d3835', ph1: '#eeeae5', ph2: '#e2ddd6', ph3: '#d5cec6', ph4: '#9a8f87' };
 const LABEL = { dark: '#67625d', light: '#ffffff' };
+
+const HERO_VARIANTS = [{ suffix: '', ratio: 16 / 10 }, { suffix: '-portrait', ratio: 4 / 5 }];
 
 // name: nazwa pliku w src/ i prefiks wyjścia; ratio: szerokość / wysokość
 const IMAGES = [
-  // Hero: z jednego oryginału powstają dwa kadry – poziomy (desktop) i pionowy (telefon)
-  { name: 'hero', ratio: 16 / 10, color: C.hero, variants: [{ suffix: '', ratio: 16 / 10 }, { suffix: '-portrait', ratio: 4 / 5 }] },
+  // Hero (karuzela): z każdego oryginału powstają dwa kadry – poziomy (desktop) i pionowy (telefon)
+  { name: 'hero', ratio: 16 / 10, color: C.hero, variants: HERO_VARIANTS },
+  { name: 'hero-2', ratio: 16 / 10, color: C.hero2, variants: HERO_VARIANTS },
+  { name: 'hero-3', ratio: 16 / 10, color: C.hero3, variants: HERO_VARIANTS },
   { name: 'o-mnie', ratio: 4 / 5, color: C.ph2, label: 'Portret · 4:5', position: 'top' },
+  { name: 'studio', ratio: 4 / 5, color: C.ph3, label: 'Studio · 4:5' },
   { name: 'usluga-slubny', ratio: 2 / 3, color: C.ph2, label: 'Makijaż ślubny · 2:3' },
   { name: 'usluga-okolicznosciowy', ratio: 2 / 3, color: C.ph3, label: 'Makijaż okolicznościowy · 2:3' },
   { name: 'usluga-fryzury', ratio: 2 / 3, color: C.ph3, label: 'Stylizacja fryzur · 2:3' },

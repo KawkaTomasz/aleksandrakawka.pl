@@ -29,6 +29,47 @@
     window.matchMedia('(min-width: 75em)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
   }
 
+  // ---------- Hero: karuzela zdjęć (przełącza się sama) ----------
+  // Przy „ogranicz ruch” w systemie nie przewija się sama – zostają tylko wskaźniki.
+  // Zatrzymuje się, gdy karta przeglądarki jest w tle.
+  const heroSlides = $$('[data-hero-slide]');
+  const heroDots = $('[data-hero-dots]');
+  if (heroSlides.length > 1 && heroDots) {
+    const INTERVAL = 6000;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let current = 0;
+    let timer = 0;
+
+    heroDots.setAttribute('role', 'group');
+    heroDots.setAttribute('aria-label', 'Zdjęcia w tle');
+    const dots = heroSlides.map((_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'hero__dot';
+      b.setAttribute('aria-label', `Zdjęcie ${i + 1} z ${heroSlides.length}`);
+      b.append(document.createElement('span'));
+      b.addEventListener('click', () => { show(i); play(); });
+      heroDots.append(b);
+      return b;
+    });
+
+    function show(i) {
+      current = (i + heroSlides.length) % heroSlides.length;
+      heroSlides.forEach((s, n) => s.classList.toggle('is-active', n === current));
+      dots.forEach((d, n) => d.setAttribute('aria-current', n === current ? 'true' : 'false'));
+    }
+    function stop() { window.clearInterval(timer); }
+    function play() {
+      stop();
+      if (!reduceMotion.matches && !document.hidden) timer = window.setInterval(() => show(current + 1), INTERVAL);
+    }
+
+    document.addEventListener('visibilitychange', play);
+    reduceMotion.addEventListener('change', play);
+    show(0);
+    play();
+  }
+
   // ---------- Karty usług i szkoleń (obracane) ----------
   const cards = $$('[data-card]');
   let openCard = null;

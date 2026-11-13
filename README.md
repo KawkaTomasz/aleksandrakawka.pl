@@ -23,8 +23,9 @@ scripts/                    narzędzia: obrazy, krytyczny CSS, favicony/OG, serw
 
    | Plik | Gdzie na stronie | Kadr |
    |---|---|---|
-   | `hero.jpg` | duże zdjęcie na górze (kadr poziomy na komputer + pionowy na telefon) | 16:10 i 4:5 |
+   | `hero.jpg`, `hero-2.jpg`, `hero-3.jpg` | karuzela na górze strony, przełącza się co 6 s (kadr poziomy na komputer + pionowy na telefon) | 16:10 i 4:5 |
    | `o-mnie.jpg` | portret w sekcji „O mnie” | 4:5 |
+   | `studio.jpg` | zdjęcie w sekcji „Studio” | 4:5 |
    | `usluga-slubny.jpg`, `usluga-okolicznosciowy.jpg`, `usluga-fryzury.jpg`, `usluga-makijaz-fryzura.jpg` | karty usług | 2:3 |
    | `szkolenie-dla-siebie.jpg`, `szkolenie-poczatkujace.jpg`, `szkolenie-indywidualne.jpg` | karty szkoleń | 4:5 |
    | `portfolio-01.jpg` … `portfolio-08.jpg` | galeria | 3:4, 4:5, 1:1, 4:5, 1:1, 4:5, 3:4, 1:1 |
