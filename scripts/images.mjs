@@ -6,7 +6,9 @@
 //
 // Zdjęcie jest kadrowane do proporcji z listy (fit: cover, strategia „attention”,
 // czyli kadr na najciekawszym fragmencie). Kadr możesz wymusić polem `position`
-// (np. 'top', 'center', 'left top'). Jeśli oryginału brak, powstaje neutralny
+// (np. 'top', 'center', 'left top') albo dokładnie polem `focus`: środek kadru jako [x, y] w ułamkach
+// szerokości/wysokości zdjęcia (np. [0.54, 0.5]); dla hero osobno dla każdego wariantu:
+// focus: { '': [x, y], '-portrait': [x, y] }. Jeśli oryginału brak, powstaje neutralny
 // placeholder w kolorze z palety – HTML nie wymaga żadnych zmian.
 //
 // Dodatkowo: assets/img/src/og.jpg (dowolny rozmiar) → assets/img/og.jpg 1200×630.
@@ -28,9 +30,9 @@ const HERO_VARIANTS = [{ suffix: '', ratio: 16 / 10 }, { suffix: '-portrait', ra
 // name: nazwa pliku w src/ i prefiks wyjścia; ratio: szerokość / wysokość
 const IMAGES = [
   // Hero (karuzela): z każdego oryginału powstają dwa kadry – poziomy (desktop) i pionowy (telefon)
-  { name: 'hero', ratio: 16 / 10, color: C.hero, variants: HERO_VARIANTS },
+  { name: 'hero', ratio: 16 / 10, color: C.hero, variants: HERO_VARIANTS, focus: { '': [0.5, 0.48] } },
   { name: 'hero-2', ratio: 16 / 10, color: C.hero2, variants: HERO_VARIANTS },
-  { name: 'hero-3', ratio: 16 / 10, color: C.hero3, variants: HERO_VARIANTS },
+  { name: 'hero-3', ratio: 16 / 10, color: C.hero3, variants: HERO_VARIANTS, focus: { '-portrait': [0.5, 0.5] } },
   { name: 'o-mnie', ratio: 4 / 5, color: C.ph2, label: 'Portret · 4:5', position: 'top' },
   { name: 'studio', ratio: 4 / 5, color: C.ph3, label: 'Studio · 4:5' },
   // Podstrona /studio/: galeria wnętrza
@@ -57,6 +59,14 @@ const IMAGES = [
 
 const findSource = (name) => EXTS.map((e) => join(SRC, `${name}.${e}`)).find((p) => existsSync(p));
 
+// Wycinek oryginału o proporcjach `ratio` ze środkiem w punkcie `focus` (ułamki), dosunięty do krawędzi.
+function focusBox(meta, ratio, [fx, fy]) {
+  const W = meta.width, H = meta.height;
+  const w = Math.min(W, Math.round(H * ratio)), h = Math.min(H, Math.round(W / ratio));
+  const clamp = (v, max) => Math.max(0, Math.min(max, Math.round(v)));
+  return { left: clamp(fx * W - w / 2, W - w), top: clamp(fy * H - h / 2, H - h), width: w, height: h };
+}
+
 const escapeXml = (s) => s.replace(/[<>&"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
 function placeholderSvg(w, h, color, label, labelColor = LABEL.dark) {
@@ -82,8 +92,9 @@ let fromPhotos = 0;
 for (const img of IMAGES) {
   const src = findSource(img.name);
   const variants = img.variants ?? [{ suffix: '', ratio: img.ratio }];
+  let meta;
   if (src) {
-    const meta = await sharp(src).metadata();
+    meta = await sharp(src).rotate().toBuffer({ resolveWithObject: true }).then((r) => r.info);
     if ((meta.width ?? 0) < WIDTHS.at(-1)) console.warn(`! ${src}: szerokość ${meta.width}px < ${WIDTHS.at(-1)}px – największy wariant zostanie powiększony`);
     fromPhotos += 1;
   }
@@ -91,7 +102,10 @@ for (const img of IMAGES) {
   for (const v of variants) {
     for (const w of WIDTHS) {
       const h = Math.round(w / v.ratio);
-      const pipeline = src
+      const focus = Array.isArray(img.focus) ? img.focus : img.focus?.[v.suffix];
+      const pipeline = src && focus
+        ? sharp(src).rotate().extract(focusBox(meta, v.ratio, focus)).resize(w, h)
+        : src
         ? sharp(src).rotate().resize(w, h, { fit: 'cover', position: img.position ?? sharp.strategy.attention })
         : sharp(placeholderSvg(w, h, img.color, img.label, img.labelColor));
       await writeFormats(pipeline, join(OUT, `${img.name}${v.suffix}-${w}`));
