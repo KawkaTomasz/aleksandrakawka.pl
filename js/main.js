@@ -146,6 +146,22 @@
     go(0);
   });
 
+  // ---------- Zdjęcia „odsłaniają się” przy przewijaniu ----------
+  // Tylko zdjęcia poniżej ekranu w chwili wczytania (bez mignięcia) i nie przy „ogranicz ruch”.
+  // Zdjęcia, które pojawią się razem (np. rząd kart), startują kolejno co 0,12 s.
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const targets = $$('.frame picture, .about__block, .card__media, .work picture, .studio-gallery picture')
+      .filter((el) => el.getBoundingClientRect().top > window.innerHeight);
+    const photoObserver = new IntersectionObserver((entries) => {
+      entries.filter((e) => e.isIntersecting).forEach((entry, i) => {
+        entry.target.style.setProperty('--d', `${i * 0.12}s`);
+        entry.target.classList.add('is-shown');
+        photoObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    targets.forEach((el) => { el.classList.add('photo-reveal'); photoObserver.observe(el); });
+  }
+
   // ---------- Podświetlenie aktywnej sekcji w menu (tylko linki do sekcji bieżącej strony) ----------
   // Podstrony (/oferta/ itd.) są oznaczane na stałe przez aria-current="page" (scripts/layout.mjs).
   const navLinks = $$('.primary-nav .nav-link').filter((a) => a.hash && a.pathname === location.pathname);

@@ -54,7 +54,8 @@ const IMAGES = [
   { name: 'portfolio-05', ratio: 1, color: C.ph2, label: 'Portfolio 05 · 1:1' },
   { name: 'portfolio-06', ratio: 4 / 5, color: C.ph2, label: 'Portfolio 06 · 4:5' },
   { name: 'portfolio-07', ratio: 3 / 4, color: C.ph3, label: 'Portfolio 07 · 3:4' },
-  { name: 'portfolio-08', ratio: 1, color: C.ph2, label: 'Portfolio 08 · 1:1' },
+  { name: 'portfolio-08', ratio: 3 / 2, color: C.ph2, label: 'Portfolio 08 · 3:2' },
+  { name: 'portfolio-09', ratio: 4 / 5, color: C.ph3, label: 'Portfolio 09 · 4:5', position: 'top' },
 ];
 
 const findSource = (name) => EXTS.map((e) => join(SRC, `${name}.${e}`)).find((p) => existsSync(p));

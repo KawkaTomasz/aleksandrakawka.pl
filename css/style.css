@@ -1165,6 +1165,16 @@ main:focus { outline: none; }
     }
   }
 }
+/* Zdjęcia: kurtyna odsłania od dołu + powolne oddalenie (klasy dodaje js/main.js) */
+@keyframes photoWipe { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@keyframes photoZoom { from { transform: scale(1.18); } to { transform: none; } }
+@keyframes blockIn { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.photo-reveal:not(.is-shown) { clip-path: inset(100% 0 0 0); }
+.photo-reveal.is-shown { animation: photoWipe 1.3s var(--ease) var(--d, 0s) backwards; }
+.photo-reveal.is-shown img { animation: photoZoom 2.2s var(--ease) var(--d, 0s) backwards; }
+.about__block.photo-reveal:not(.is-shown) { clip-path: none; opacity: 0; }
+.about__block.photo-reveal.is-shown { transform-origin: top left; animation: blockIn 1.4s var(--ease) var(--d, 0s) backwards; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
