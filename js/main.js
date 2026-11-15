@@ -237,6 +237,31 @@
     targets.forEach((el) => { el.classList.add('photo-reveal'); photoObserver.observe(el); });
   }
 
+  // ---------- Paralaksa: zdjęcia w ramkach przesuwają się wolniej niż strona ----------
+  // --py: przesunięcie zdjęcia w ramce (zdjęcie jest lekko powiększone, więc krawędzie się nie odsłaniają),
+  // --by: beżowy prostokąt za zdjęciem w „O mnie” jedzie delikatnie w drugą stronę.
+  const floating = $$('.frame picture, .about__block');
+  if (floating.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    floating.forEach((el) => el.classList.add('has-parallax'));
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const vh = window.innerHeight;
+      floating.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -100 || r.top > vh + 100) return;
+        // -1 (nad środkiem ekranu) … 1 (pod środkiem ekranu)
+        const p = Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2)));
+        if (el.tagName === 'PICTURE') el.style.setProperty('--py', `${(p * 5).toFixed(2)}%`);
+        else el.style.setProperty('--by', `${(p * -28).toFixed(1)}px`);
+      });
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; window.requestAnimationFrame(update); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
+
   // ---------- Podświetlenie aktywnej sekcji w menu (tylko linki do sekcji bieżącej strony) ----------
   // Podstrony (/oferta/ itd.) są oznaczane na stałe przez aria-current="page" (scripts/layout.mjs).
   const navLinks = $$('.primary-nav .nav-link').filter((a) => a.hash && a.pathname === location.pathname);
