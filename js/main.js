@@ -109,6 +109,81 @@
     });
   }
 
+  // ---------- Portfolio: powiększanie zdjęć (lightbox) ----------
+  // Klik w zdjęcie → ciemne tło i duże zdjęcie. Strzałki / przesunięcie palcem = kolejne zdjęcie
+  // (tylko spośród widocznych po filtrze), Esc / krzyżyk / klik w tło = zamknięcie.
+  const galleryItems = gallery ? $$('.gallery__item', gallery) : [];
+  if (galleryItems.length && typeof HTMLDialogElement === 'function') {
+    const icon = (d) => `<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">${d}</svg>`;
+    const box = document.createElement('dialog');
+    box.className = 'lightbox';
+    box.setAttribute('aria-label', 'Powiększone zdjęcie');
+    box.innerHTML = `
+      <p class="lightbox__count"></p>
+      <figure class="lightbox__figure"><div class="lightbox__media"></div><figcaption class="lightbox__cap"></figcaption></figure>
+      <button class="lightbox__btn lightbox__prev" type="button" aria-label="Poprzednie zdjęcie">${icon('<path d="M20 12H4M10 6l-6 6 6 6"/>')}</button>
+      <button class="lightbox__btn lightbox__next" type="button" aria-label="Następne zdjęcie">${icon('<path d="M4 12h16M14 6l6 6-6 6"/>')}</button>
+      <button class="lightbox__btn lightbox__close" type="button" aria-label="Zamknij" autofocus>${icon('<path d="M6 6l12 12M18 6L6 18"/>')}</button>`;
+    document.body.append(box);
+    const media = $('.lightbox__media', box);
+    const cap = $('.lightbox__cap', box);
+    const count = $('.lightbox__count', box);
+    const prev = $('.lightbox__prev', box);
+    const next = $('.lightbox__next', box);
+    let list = [];
+    let idx = 0;
+
+    const titleOf = (item) => $('.work__title', item)?.textContent.trim() ?? '';
+    function render() {
+      const item = list[idx];
+      const pic = $('picture', item).cloneNode(true);
+      $$('source, img', pic).forEach((el) => el.setAttribute('sizes', '100vw'));
+      const img = $('img', pic);
+      img.removeAttribute('loading');
+      img.removeAttribute('style');
+      media.replaceChildren(pic);
+      cap.textContent = [titleOf(item), $('.work__cat', item)?.textContent.trim()].filter(Boolean).join(' · ');
+      count.textContent = list.length > 1 ? `${idx + 1} / ${list.length}` : '';
+      prev.hidden = next.hidden = list.length < 2;
+    }
+    const go = (step) => { idx = (idx + step + list.length) % list.length; render(); };
+    function open(item) {
+      list = galleryItems.filter((i) => !i.hidden);
+      idx = Math.max(0, list.indexOf(item));
+      render();
+      document.documentElement.classList.add('has-lightbox');
+      box.showModal();
+    }
+
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    $('.lightbox__close', box).addEventListener('click', () => box.close());
+    box.addEventListener('close', () => document.documentElement.classList.remove('has-lightbox'));
+    // Klik poza zdjęciem i przyciskami zamyka
+    box.addEventListener('click', (e) => { if (!e.target.closest('img, button')) box.close(); });
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') go(-1);
+      if (e.key === 'ArrowRight') go(1);
+    });
+    let touchX = null;
+    box.addEventListener('touchstart', (e) => { touchX = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+    box.addEventListener('touchend', (e) => {
+      if (touchX === null || list.length < 2) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+      touchX = null;
+    });
+
+    galleryItems.forEach((item) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'work__open';
+      b.setAttribute('aria-label', `Powiększ zdjęcie: ${titleOf(item)}`);
+      b.addEventListener('click', () => open(item));
+      $('.work', item).append(b);
+    });
+  }
+
   // ---------- Opinie (karuzela bez autoodtwarzania) ----------
   $$('[data-carousel]').forEach((root) => {
     const slides = $$('[data-slide]', root);
