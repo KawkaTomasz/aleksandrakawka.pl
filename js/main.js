@@ -29,6 +29,17 @@
     window.matchMedia('(min-width: 75em)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
   }
 
+  // ---------- Podmenu (Oferta, Szkolenia): po kliknięciu pozycji pole się zwija ----------
+  // Otwiera je samo CSS (:hover / :focus-within); tu tylko zamykamy po wyborze, aż kursor opuści menu.
+  $$('.has-sub').forEach((li) => {
+    $$('.subnav a', li).forEach((a) => a.addEventListener('click', () => {
+      li.classList.add('is-closed');
+      a.blur();
+    }));
+    li.addEventListener('mouseleave', () => li.classList.remove('is-closed'));
+    li.addEventListener('focusin', (e) => { if (e.target === $('.nav-link', li)) li.classList.remove('is-closed'); });
+  });
+
   // ---------- Hero: karuzela zdjęć (przełącza się sama) ----------
   // Przy „ogranicz ruch” w systemie nie przewija się sama – zostają tylko wskaźniki.
   // Zatrzymuje się, gdy karta przeglądarki jest w tle.
