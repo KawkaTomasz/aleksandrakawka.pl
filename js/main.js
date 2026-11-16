@@ -263,6 +263,21 @@
     watched.forEach((_, box) => photoObserver.observe(box));
   }
 
+  // ---------- Film (sekcja Studio) ----------
+  // Pobiera się dopiero przy przewinięciu w pobliże i gra tylko, gdy jest na ekranie.
+  // Przy „ogranicz ruch” nie startuje sam – pokazuje przyciski odtwarzania.
+  $$('video[data-autoplay]').forEach((v) => {
+    const load = () => { if (!v.src) v.src = v.dataset.src; };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      v.controls = true;
+      load();
+      return;
+    }
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { load(); v.play().catch(() => { v.controls = true; }); } else v.pause();
+    }, { rootMargin: '200px 0px' }).observe(v);
+  });
+
   // ---------- Podświetlenie aktywnej sekcji w menu (tylko linki do sekcji bieżącej strony) ----------
   // Podstrony (/oferta/ itd.) są oznaczane na stałe przez aria-current="page" (scripts/layout.mjs).
   const navLinks = $$('.primary-nav .nav-link').filter((a) => a.hash && a.pathname === location.pathname);

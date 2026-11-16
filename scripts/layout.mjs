@@ -25,7 +25,7 @@ const version = (path) => {
   }
   return hashes.get(path);
 };
-const ASSET = /(?<=["\s,])(\/(?:assets\/img|css|js)\/[\w./-]+\.(?:avif|webp|jpe?g|png|svg|ico|css|js))(?:\?v=[0-9a-f]+)?/g;
+const ASSET = /(?<=["\s,])(\/(?:assets\/img|assets\/video|css|js)\/[\w./-]+\.(?:avif|webp|jpe?g|png|svg|ico|css|js|mp4))(?:\?v=[0-9a-f]+)?/g;
 
 for (const { file, url } of PAGES) {
   let html = await readFile(file, 'utf8');

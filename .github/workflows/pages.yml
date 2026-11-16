@@ -32,7 +32,7 @@ jobs:
           cp index.html polityka-prywatnosci.html 404.html CNAME robots.txt sitemap.xml \
              favicon.svg favicon.ico apple-touch-icon.png _site/
           cp -r css js oferta szkolenia studio _site/
-          cp -r assets/fonts _site/assets/
+          cp -r assets/fonts assets/video _site/assets/
           find assets/img -maxdepth 1 -type f -exec cp {} _site/assets/img/ \;
 
       - uses: actions/upload-pages-artifact@v5

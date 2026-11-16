@@ -179,6 +179,7 @@ main:focus { outline: none; }
   text-transform: uppercase;
   line-height: 1.4;
 }
+.eyebrow--accent { color: var(--c-brown); }
 .eyebrow--light { color: rgba(255, 255, 255, 0.88); }
 
 /* ---------- Przyciski i linki ---------- */
@@ -614,21 +615,24 @@ main:focus { outline: none; }
   .hero__copy { max-width: 50%; }
 }
 
-/* ---------- Pasek usług (marquee) ---------- */
-.marquee { overflow: hidden; padding-block: 1.25rem; background: var(--c-stone); color: var(--c-brown); }
-.marquee__track { display: flex; width: max-content; }
-.marquee__group {
+/* ---------- Ogłoszenie pod hero (zapisy na sezon ślubny) ---------- */
+.announce { background: var(--c-stone); color: var(--c-brown-dark); }
+.announce__inner {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 2.5rem;
-  padding-right: 2.5rem;
-  font-family: var(--f-serif);
-  font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem);
-  font-style: italic;
-  font-weight: 300;
-  white-space: nowrap;
+  gap: 0.5rem;
+  padding-block: 1.5rem 1.25rem;
+  text-align: center;
 }
-.marquee__group i { width: 7px; height: 7px; border: 1px solid var(--c-accent); transform: rotate(45deg); }
+.announce__eyebrow { font-size: var(--fs-small); letter-spacing: 0.3em; text-transform: uppercase; color: var(--c-muted); }
+.announce__text { font-family: var(--f-serif); font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem); font-weight: 300; line-height: 1.2; }
+.announce__link { color: var(--c-brown); }
+@media (min-width: 64em) {
+  .announce__inner { flex-direction: row; justify-content: space-between; gap: 2rem; padding-block: 1.25rem; text-align: left; }
+  .announce__eyebrow { display: flex; align-items: center; gap: 1rem; }
+  .announce__eyebrow::after { content: ""; width: 3rem; height: 1px; background: var(--c-accent); }
+}
 
 /* ---------- Podstrony (polityka prywatności, 404) ---------- */
 .page-hero {
@@ -680,7 +684,6 @@ main:focus { outline: none; }
 @keyframes rise { from { opacity: 0; transform: translateY(1.25rem); } to { opacity: 1; transform: none; } }
 @keyframes heroIn { from { transform: scale(1.06); } to { transform: none; } }
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes marquee { to { transform: translateX(-50%); } }
 @keyframes menuIn { from { opacity: 0; transform: translateY(-0.5rem); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: no-preference) {
   .hero__line > span { animation: lineUp 1.1s var(--ease) both; }
@@ -691,7 +694,6 @@ main:focus { outline: none; }
   .hero__badge { animation-delay: 0.6s; }
   .hero__ring { animation: spin 36s linear infinite; }
   .hero__slide.is-active img { animation: heroIn 8s cubic-bezier(0.25, 0.6, 0.3, 1) both; }
-  .marquee__track { animation: marquee 60s linear infinite; }
   .mobile-menu:not([hidden]) { animation: menuIn 0.45s var(--ease); }
 }
 
@@ -733,6 +735,7 @@ main:focus { outline: none; }
 .frame picture { overflow: hidden; }
 .frame img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 30%; }
 .frame--tall img { aspect-ratio: 4 / 5; }
+.frame--video video { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; background: var(--c-stone); }
 @media (min-width: 64em) { .frame--tall img { aspect-ratio: 2 / 3; } }
 .about__copy { display: flex; flex-direction: column; gap: 1.5rem; max-width: 34rem; }
 .about__copy > p:not(.eyebrow):not(.signature) { color: var(--c-muted); line-height: 1.85; }
