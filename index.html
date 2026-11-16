@@ -139,7 +139,7 @@
 <main id="tresc" tabindex="-1">
 
   <section class="hero on-dark" aria-labelledby="hero-title">
-    <!-- Zdjęcia hero (karuzela): podmień oryginały w assets/img/src/hero.jpg, hero-2.jpg, hero-3.jpg i uruchom `npm run images`.
+    <!-- Zdjęcia hero (karuzela): podmień oryginały w assets/img/src/hero.jpg, hero-2.jpg, hero-3.jpg, hero-4.jpg i uruchom `npm run images`.
          Kolejny slajd = kolejny <picture> (np. hero-4) + wpis w scripts/images.mjs.
          data-hero-mobile = slajd pokazywany tylko na telefonie. -->
     <div class="hero__media" data-hero-slides>
@@ -166,6 +166,14 @@
         <source type="image/avif" srcset="/assets/img/hero-3-480.avif?v=f6df2b33 480w, /assets/img/hero-3-960.avif?v=5e703b3a 960w, /assets/img/hero-3-1600.avif?v=ff25b966 1600w" sizes="100vw">
         <source type="image/webp" srcset="/assets/img/hero-3-480.webp?v=6df4a93a 480w, /assets/img/hero-3-960.webp?v=da69b790 960w, /assets/img/hero-3-1600.webp?v=40f67140 1600w" sizes="100vw">
         <img src="/assets/img/hero-3-1600.jpg?v=3cf3e19a" srcset="/assets/img/hero-3-480.jpg?v=87d69e07 480w, /assets/img/hero-3-960.jpg?v=570788e0 960w, /assets/img/hero-3-1600.jpg?v=3cf3e19a 1600w" sizes="100vw" width="1600" height="1000" alt="" loading="lazy" decoding="async">
+      </picture>
+      <picture class="hero__slide" data-hero-slide>
+        <source type="image/avif" media="(max-width: 47.99em)" srcset="/assets/img/hero-4-portrait-480.avif?v=8283cf7c 480w, /assets/img/hero-4-portrait-960.avif?v=32ca9f99 960w, /assets/img/hero-4-portrait-1600.avif?v=3fdc58cc 1600w" sizes="100vw">
+        <source type="image/webp" media="(max-width: 47.99em)" srcset="/assets/img/hero-4-portrait-480.webp?v=9b0509a6 480w, /assets/img/hero-4-portrait-960.webp?v=c7e63d26 960w, /assets/img/hero-4-portrait-1600.webp?v=facce755 1600w" sizes="100vw">
+        <source media="(max-width: 47.99em)" srcset="/assets/img/hero-4-portrait-480.jpg?v=07a503dd 480w, /assets/img/hero-4-portrait-960.jpg?v=f93d3b60 960w, /assets/img/hero-4-portrait-1600.jpg?v=d176e4e8 1600w" sizes="100vw">
+        <source type="image/avif" srcset="/assets/img/hero-4-480.avif?v=0e85036f 480w, /assets/img/hero-4-960.avif?v=605cdd16 960w, /assets/img/hero-4-1600.avif?v=451c310c 1600w" sizes="100vw">
+        <source type="image/webp" srcset="/assets/img/hero-4-480.webp?v=168e98e9 480w, /assets/img/hero-4-960.webp?v=d63333ee 960w, /assets/img/hero-4-1600.webp?v=6e38371e 1600w" sizes="100vw">
+        <img src="/assets/img/hero-4-1600.jpg?v=1f1ea2c0" srcset="/assets/img/hero-4-480.jpg?v=738a5487 480w, /assets/img/hero-4-960.jpg?v=5fbff1fa 960w, /assets/img/hero-4-1600.jpg?v=1f1ea2c0 1600w" sizes="100vw" width="1600" height="1000" alt="Aleksandra Kawka podczas makijażu klientki w studiu" loading="lazy" decoding="async">
       </picture>
     </div>
     <div class="hero__shade" aria-hidden="true"></div>

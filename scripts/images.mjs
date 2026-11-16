@@ -33,6 +33,7 @@ const IMAGES = [
   { name: 'hero', ratio: 16 / 10, color: C.hero, variants: HERO_VARIANTS, focus: { '': [0.5, 0.48] } },
   { name: 'hero-2', ratio: 16 / 10, color: C.hero2, variants: HERO_VARIANTS },
   { name: 'hero-3', ratio: 16 / 10, color: C.hero3, variants: HERO_VARIANTS, focus: { '-portrait': [0.5, 0.5] } },
+  { name: 'hero-4', ratio: 16 / 10, color: C.hero2, variants: HERO_VARIANTS, focus: { '': [0.5, 0.4], '-portrait': [0.5, 0.42] } },
   { name: 'o-mnie', ratio: 4 / 5, color: C.ph2, label: 'Portret · 4:5', position: 'top' },
   { name: 'studio', ratio: 4 / 5, color: C.ph3, label: 'Studio · 4:5' },
   // Podstrona /studio/: galeria wnętrza
