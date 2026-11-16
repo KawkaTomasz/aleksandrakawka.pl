@@ -234,7 +234,7 @@
     go(0);
   });
 
-  // ---------- Zdjęcia „odsłaniają się” przy przewijaniu ----------
+  // ---------- Zdjęcia łagodnie „wyłaniają się z mgły” przy przewijaniu ----------
   // Zdjęcia są schowane od pierwszej klatki (krytyczny CSS: .js … :not(.is-shown)) i wjeżdżają, gdy
   // dojadą do ~80% wysokości ekranu – także te, których skrawek widać zaraz po otwarciu strony.
   // Zdjęcia, które pojawią się razem (np. rząd kart), startują kolejno co 0,12 s. Przy „ogranicz ruch” – bez animacji.
@@ -242,8 +242,7 @@
   if (!('IntersectionObserver' in window)) {
     revealTargets.forEach((el) => el.classList.add('is-shown'));
   } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // Obserwujemy rodzica, nie samo zdjęcie: schowane (przycięte clip-path) zdjęcie Chrome uznaje za
-    // niewidoczne, więc przy szybkim przewinięciu potrafiło zostać schowane na zawsze.
+    // Obserwujemy rodzica, nie samo zdjęcie (schowany element bywa uznawany za niewidoczny).
     const watched = new Map();
     revealTargets.forEach((el) => {
       const box = el.parentElement;

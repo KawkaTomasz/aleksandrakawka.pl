@@ -699,7 +699,7 @@ main:focus { outline: none; }
 
 /* Zdjęcia odsłaniane przy przewijaniu (js/main.js) – schowane od pierwszej klatki, więc nie migają */
 @media (prefers-reduced-motion: no-preference) {
-  .js :is(.frame, .card__media, .work picture, .studio-gallery picture):not(.is-shown) { clip-path: inset(100% 0 0 0); }
+  .js :is(.frame, .card__media, .work picture, .studio-gallery picture):not(.is-shown) { opacity: 0; }
   .js .about__block:not(.is-shown) { opacity: 0; }
 }
 
@@ -1312,12 +1312,12 @@ html.has-lightbox { overflow: hidden; }
   }
 }
 /* Zdjęcia: kurtyna odsłania od dołu + powolne oddalenie (klasy dodaje js/main.js) */
-@keyframes photoWipe { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
-@keyframes photoZoom { from { transform: scale(1.18); } to { transform: none; } }
-@keyframes blockIn { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
-.photo-reveal.is-shown { animation: photoWipe 1.3s var(--ease) var(--d, 0s) backwards; }
-.photo-reveal.is-shown img { animation: photoZoom 2.2s var(--ease) var(--d, 0s) backwards; }
-.about__block.photo-reveal.is-shown { transform-origin: top left; animation: blockIn 1.4s var(--ease) var(--d, 0s) backwards; }
+@keyframes photoIn { from { opacity: 0; filter: blur(14px); transform: scale(1.03); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes photoZoom { from { transform: scale(1.06); } to { transform: none; } }
+@keyframes blockIn { from { transform: scale(0.94); opacity: 0; } to { transform: none; opacity: 1; } }
+.photo-reveal.is-shown { animation: photoIn 1.8s cubic-bezier(0.25, 0.6, 0.3, 1) var(--d, 0s) backwards; }
+.photo-reveal.is-shown img { animation: photoZoom 2.6s cubic-bezier(0.25, 0.6, 0.3, 1) var(--d, 0s) backwards; }
+.about__block.photo-reveal.is-shown { transform-origin: top left; animation: blockIn 1.8s cubic-bezier(0.25, 0.6, 0.3, 1) var(--d, 0s) backwards; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
