@@ -137,6 +137,8 @@
     function render() {
       const item = list[idx];
       const pic = $('picture', item).cloneNode(true);
+      pic.className = '';
+      pic.style.cssText = '';
       $$('source, img', pic).forEach((el) => el.setAttribute('sizes', '100vw'));
       const img = $('img', pic);
       img.removeAttribute('loading');
@@ -222,44 +224,22 @@
   });
 
   // ---------- Zdjęcia „odsłaniają się” przy przewijaniu ----------
-  // Tylko zdjęcia poniżej ekranu w chwili wczytania (bez mignięcia) i nie przy „ogranicz ruch”.
-  // Zdjęcia, które pojawią się razem (np. rząd kart), startują kolejno co 0,12 s.
-  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const targets = $$('.frame picture, .about__block, .card__media, .work picture, .studio-gallery picture')
-      .filter((el) => el.getBoundingClientRect().top > window.innerHeight);
+  // Zdjęcia są schowane od pierwszej klatki (krytyczny CSS: .js … :not(.is-shown)) i wjeżdżają, gdy
+  // dojadą do ~80% wysokości ekranu – także te, których skrawek widać zaraz po otwarciu strony.
+  // Zdjęcia, które pojawią się razem (np. rząd kart), startują kolejno co 0,12 s. Przy „ogranicz ruch” – bez animacji.
+  const revealTargets = $$('.frame, .about__block, .card__media, .work picture, .studio-gallery picture');
+  if (!('IntersectionObserver' in window)) {
+    revealTargets.forEach((el) => el.classList.add('is-shown'));
+  } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const targets = revealTargets;
     const photoObserver = new IntersectionObserver((entries) => {
       entries.filter((e) => e.isIntersecting).forEach((entry, i) => {
         entry.target.style.setProperty('--d', `${i * 0.12}s`);
         entry.target.classList.add('is-shown');
         photoObserver.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -12% 0px' });
+    }, { rootMargin: '0px 0px -20% 0px' });
     targets.forEach((el) => { el.classList.add('photo-reveal'); photoObserver.observe(el); });
-  }
-
-  // ---------- Paralaksa: zdjęcia w ramkach przesuwają się wolniej niż strona ----------
-  // --py: przesunięcie zdjęcia w ramce (zdjęcie jest lekko powiększone, więc krawędzie się nie odsłaniają),
-  // --by: beżowy prostokąt za zdjęciem w „O mnie” jedzie delikatnie w drugą stronę.
-  const floating = $$('.frame picture, .about__block');
-  if (floating.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    floating.forEach((el) => el.classList.add('has-parallax'));
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      const vh = window.innerHeight;
-      floating.forEach((el) => {
-        const r = el.getBoundingClientRect();
-        if (r.bottom < -100 || r.top > vh + 100) return;
-        // -1 (nad środkiem ekranu) … 1 (pod środkiem ekranu)
-        const p = Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2)));
-        if (el.tagName === 'PICTURE') el.style.setProperty('--py', `${(p * 5).toFixed(2)}%`);
-        else el.style.setProperty('--by', `${(p * -28).toFixed(1)}px`);
-      });
-    };
-    const onScroll = () => { if (!ticking) { ticking = true; window.requestAnimationFrame(update); } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
   }
 
   // ---------- Podświetlenie aktywnej sekcji w menu (tylko linki do sekcji bieżącej strony) ----------
