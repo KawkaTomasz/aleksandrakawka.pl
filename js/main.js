@@ -238,7 +238,7 @@
   // Zdjęcia są schowane od pierwszej klatki (krytyczny CSS: .js … :not(.is-shown)) i wjeżdżają, gdy
   // dojadą do ~80% wysokości ekranu – także te, których skrawek widać zaraz po otwarciu strony.
   // Zdjęcia, które pojawią się razem (np. rząd kart), startują kolejno co 0,12 s. Przy „ogranicz ruch” – bez animacji.
-  const revealTargets = $$('.frame, .about__block, .signature, .card__media, .work picture, .studio-gallery picture');
+  const revealTargets = $$('.frame, .about__block, .card__media, .work picture, .studio-gallery picture');
   if (!('IntersectionObserver' in window)) {
     revealTargets.forEach((el) => el.classList.add('is-shown'));
   } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -246,7 +246,7 @@
     // niewidoczne, więc przy szybkim przewinięciu potrafiło zostać schowane na zawsze.
     const watched = new Map();
     revealTargets.forEach((el) => {
-      const box = el.matches('.signature') ? el : el.parentElement;
+      const box = el.parentElement;
       if (!watched.has(box)) watched.set(box, []);
       watched.get(box).push(el);
     });
