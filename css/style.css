@@ -699,6 +699,7 @@ main:focus { outline: none; }
 @media (prefers-reduced-motion: no-preference) {
   .js :is(.frame, .card__media, .work picture, .studio-gallery picture):not(.is-shown) { clip-path: inset(100% 0 0 0); }
   .js .about__block:not(.is-shown) { opacity: 0; }
+  .js .signature:not(.is-shown) :is(svg, span) { visibility: hidden; }
 }
 
 /* critical:end */
@@ -736,19 +737,9 @@ main:focus { outline: none; }
 @media (min-width: 64em) { .frame--tall img { aspect-ratio: 2 / 3; } }
 .about__copy { display: flex; flex-direction: column; gap: 1.5rem; max-width: 34rem; }
 .about__copy > p:not(.eyebrow):not(.signature) { color: var(--c-muted); line-height: 1.85; }
-.signature {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-top: 0.5rem;
-  color: var(--c-brown);
-  font-family: var(--f-serif);
-  font-size: 2.5rem;
-  font-style: italic;
-  font-weight: 300;
-  line-height: 1;
-}
-.signature span { flex: 1; max-width: 8.75rem; height: 1px; background: var(--c-accent); }
+.signature { display: flex; align-items: center; gap: 1.25rem; margin-top: 0.25rem; color: var(--c-brown); }
+.signature svg { flex: none; width: auto; height: clamp(4rem, 3.4rem + 1.5vw, 5rem); }
+.signature span { flex: 1; max-width: 8.75rem; height: 1px; margin-top: 1.5rem; background: var(--c-accent); }
 @media (min-width: 48em) {
   .about__media { padding: 2.25rem 0 0 2.25rem; }
 }
@@ -1314,6 +1305,12 @@ html.has-lightbox { overflow: hidden; }
 @keyframes blockIn { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
 .photo-reveal.is-shown { animation: photoWipe 1.3s var(--ease) var(--d, 0s) backwards; }
 .photo-reveal.is-shown img { animation: photoZoom 2.2s var(--ease) var(--d, 0s) backwards; }
+/* Podpis „pisze się” od lewej, potem dorysowuje się kreska */
+@keyframes sigWrite { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 -5% 0 0); } }
+@keyframes sigLine { from { transform: scaleX(0); } to { transform: none; } }
+.signature.photo-reveal.is-shown { animation: none; }
+.signature.is-shown svg { animation: sigWrite 1.8s cubic-bezier(0.45, 0.05, 0.35, 1) 0.2s backwards; }
+.signature.is-shown span { transform-origin: left; animation: sigLine 1s var(--ease) 1.6s backwards; }
 .about__block.photo-reveal.is-shown { transform-origin: top left; animation: blockIn 1.4s var(--ease) var(--d, 0s) backwards; }
 
 @media (prefers-reduced-motion: reduce) {

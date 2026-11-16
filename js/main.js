@@ -238,19 +238,29 @@
   // Zdjęcia są schowane od pierwszej klatki (krytyczny CSS: .js … :not(.is-shown)) i wjeżdżają, gdy
   // dojadą do ~80% wysokości ekranu – także te, których skrawek widać zaraz po otwarciu strony.
   // Zdjęcia, które pojawią się razem (np. rząd kart), startują kolejno co 0,12 s. Przy „ogranicz ruch” – bez animacji.
-  const revealTargets = $$('.frame, .about__block, .card__media, .work picture, .studio-gallery picture');
+  const revealTargets = $$('.frame, .about__block, .signature, .card__media, .work picture, .studio-gallery picture');
   if (!('IntersectionObserver' in window)) {
     revealTargets.forEach((el) => el.classList.add('is-shown'));
   } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const targets = revealTargets;
+    // Obserwujemy rodzica, nie samo zdjęcie: schowane (przycięte clip-path) zdjęcie Chrome uznaje za
+    // niewidoczne, więc przy szybkim przewinięciu potrafiło zostać schowane na zawsze.
+    const watched = new Map();
+    revealTargets.forEach((el) => {
+      const box = el.matches('.signature') ? el : el.parentElement;
+      if (!watched.has(box)) watched.set(box, []);
+      watched.get(box).push(el);
+    });
     const photoObserver = new IntersectionObserver((entries) => {
-      entries.filter((e) => e.isIntersecting).forEach((entry, i) => {
-        entry.target.style.setProperty('--d', `${i * 0.12}s`);
-        entry.target.classList.add('is-shown');
-        photoObserver.unobserve(entry.target);
+      entries.filter((e) => e.isIntersecting).flatMap((e) => {
+        photoObserver.unobserve(e.target);
+        return watched.get(e.target);
+      }).forEach((el, i) => {
+        el.style.setProperty('--d', `${i * 0.12}s`);
+        el.classList.add('is-shown');
       });
     }, { rootMargin: '0px 0px -20% 0px' });
-    targets.forEach((el) => { el.classList.add('photo-reveal'); photoObserver.observe(el); });
+    revealTargets.forEach((el) => el.classList.add('photo-reveal'));
+    watched.forEach((_, box) => photoObserver.observe(box));
   }
 
   // ---------- Podświetlenie aktywnej sekcji w menu (tylko linki do sekcji bieżącej strony) ----------
